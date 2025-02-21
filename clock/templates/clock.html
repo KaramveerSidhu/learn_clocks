@@ -1,51 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Learn Clocks</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-  <style>
-    body {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #f4f4f4;
-      margin: 0;
-    }
-    canvas {
-      display: block;
-      border-radius: 50%;
-    }
-
-    /* The canvas has a real width/height of 800×800,
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Learn Clocks</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f4f4f4;
+        margin: 0;
+      }
+      canvas {
+        display: block;
+        border-radius: 50%;
+      }
+      /* The canvas has a real width/height of 800×800,
        and is also displayed at 800×800. */
-    #clockCanvas {
-      width: 600px;   /* CSS display size */
-      height: 600px;  /* CSS display size */
-    }
-
-    .controls {
-      margin-top: 20px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-      width: 600px;
-    }
-    .message {
-      margin-top: 10px;
-      display: none;
-    }
-    .text {
-      font-size: 32px;
-      color: lightseagreen;
-      font-weight: 600;
-    }
-    .button {
+      #clockCanvas {
+        width: 600px; /* CSS display size */
+        height: 600px; /* CSS display size */
+      }
+      .controls {
+        margin-top: 20px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        width: 600px;
+      }
+      .message {
+        margin-top: 10px;
+        display: none;
+      }
+      .text {
+        font-size: 32px;
+        color: lightseagreen;
+        font-weight: 600;
+      }
+      .button {
         font-size: 24px;
         font-weight: 600;
         outline: none;
@@ -54,236 +55,320 @@
         cursor: pointer;
         background: lightseagreen;
         color: white;
-        border: 1px solid lightseagreen
-    }
-    .validate {
+        border: 1px solid lightseagreen;
+      }
+      .validate {
         margin-top: 48px;
-    }
-    .retry {
-      background: transparent;
-      color: lightseagreen;
-    }
-    .buttons {
+      }
+      .retry {
+        background: transparent;
+        color: lightseagreen;
+      }
+      .buttons {
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 12px;
-    }
-    .container{
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-evenly;
-    }
-    
-    input[type="time"]::-webkit-datetime-edit-ampm-field {
-      display: none;
-    }
-    .flatpickr-am-pm {
-      display: none;
-    }
-    #timeInput {
-      padding: 12px 42px;
-      text-align: center;
-      font-size: 32px;
-      outline: none;
-      border: 1px solid lightseagreen;
-      border-radius: 8px;
-      width: 220px;
-      color: lightseagreen;
-      font-weight: 600;
-    }
-    #timeInput::placeholder {
-      color: lightseagreen;
-    }
-    
-  </style>
-</head>
-<body>
-  <!-- The actual drawing buffer is 800×800 pixels -->
-   <div class="container">
-    <canvas id="clockCanvas" width="800" height="800"></canvas>
-
-    <div class="controls">
-      <!-- <label for="timeInput" class="text">Choose Time</label> -->
-      <!-- <input type="time" id="timeInput" step="60"> -->
-      <input type="text" id="timeInput" placeholder="Choose Time">
-      <button id="validateBtn" onclick="validateTime()" class="button validate">Check</button>
-      <p id="message" class="message text"></p>
-
-      <div class="buttons">
-          <button id="viewAnswer" onclick="showAnswer()" class="button" style="display: none;">View Answer</button>
-          <button id="retry" onclick="retrySameTime()" class="button retry" style="display: none;">Retry</button>
-          <button id="tryAgain" onclick="generateRandomTime()" class="button" style="display: none;">Try More</button>
-        </div>
+      }
+      .container {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+      }
+      input[type="time"]::-webkit-datetime-edit-ampm-field {
+        display: none;
+      }
+      .flatpickr-am-pm {
+        display: none;
+      }
+      #timeInput {
+        padding: 12px 42px;
+        text-align: center;
+        font-size: 32px;
+        outline: none;
+        border: 1px solid lightseagreen;
+        border-radius: 8px;
+        width: 220px;
+        color: lightseagreen;
+        font-weight: 600;
+      }
+      #timeInput::placeholder {
+        color: lightseagreen;
+      }
+      #levelSelect {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        padding: 8px;
+        background: transparent;
+        color: lightseagreen;
+        height: 52.8px;
+      }
+      #reloadBtn {
+        position: absolute;
+        top: 20px;
+        left: 140px;
+        font-size: 32px;
+        height: 52.8px;
+        padding: 0 16px;
+        transform: scaleX(-1);
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <select id="levelSelect" class="button" onchange="generateRandomTime()">
+        <option value="1">Level 1</option>
+        <option value="2">Level 2</option>
+        <option value="3">Level 3</option>
+        <option value="4">Level 4</option>
+      </select>
+      <button
+        id="reloadBtn"
+        class="button"
+        onclick="resetUI(); generateRandomTime();"
+        style="margin-left: 10px"
+      >
+        &#x21bb;
+        <!-- Unicode character for reload icon -->
+      </button>
     </div>
-  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  <script>
-    flatpickr("#timeInput", {
+    <!-- The actual drawing buffer is 800×800 pixels -->
+    <div class="container">
+      <canvas id="clockCanvas" width="800" height="800"></canvas>
+
+      <div class="controls">
+        <input type="text" id="timeInput" placeholder="Choose Time" />
+        <button
+          id="validateBtn"
+          onclick="validateTime()"
+          class="button validate"
+        >
+          Check
+        </button>
+        <p id="message" class="message text"></p>
+
+        <div class="buttons">
+          <button
+            id="viewAnswer"
+            onclick="showAnswer()"
+            class="button"
+            style="display: none"
+          >
+            View Answer
+          </button>
+          <button
+            id="retry"
+            onclick="retrySameTime()"
+            class="button retry"
+            style="display: none"
+          >
+            Retry
+          </button>
+          <button
+            id="tryAgain"
+            onclick="generateRandomTime()"
+            class="button"
+            style="display: none"
+          >
+            Try More
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+      flatpickr("#timeInput", {
         enableTime: true,
         noCalendar: true,
-        dateFormat: "h:i", // 12-hour format without AM/PM
-        time_24hr: false, // Ensures it's in 12-hour format
-    });
-  </script>
-  <script>
-    const canvas = document.getElementById("clockCanvas");
-    const ctx = canvas.getContext("2d");
+        dateFormat: "h:i", 
+        time_24hr: false, 
+      });
+    </script>
+    <script>
+      const canvas = document.getElementById("clockCanvas");
+      const ctx = canvas.getContext("2d");
 
-    let currentHours = 0;
-    let currentMinutes = 0;
+      let currentHours = 0;
+      let currentMinutes = 0;
 
-    function drawClock(hours, minutes) {
-      // Clear the entire canvas
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.save();
+      function drawClock(hours, minutes) {
+        // Clear the entire canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.save();
 
-      // Move origin to the center
-      ctx.translate(canvas.width / 2, canvas.height / 2);
+        // Move origin to the center
+        ctx.translate(canvas.width / 2, canvas.height / 2);
 
-      // Keep a 40px margin around the clock.
-      const radius = (canvas.width / 2) - 40; // => 360
+        // Keep a 40px margin around the clock.
+        const radius = canvas.width / 2 - 40; // => 360
 
-      // 1) Draw the outer circle
-      ctx.beginPath();
-      ctx.arc(0, 0, radius, 0, 2 * Math.PI);
-      ctx.lineWidth = 16;   // or ctx.lineWidth = radius * 0.03; // e.g. 3% of the radius      
-      ctx.strokeStyle = "black";
-      ctx.stroke();
-
-      // 2) Draw the numbers (1–12)
-      //    Slightly smaller font, placed inward to avoid clashing with minute marks
-      ctx.font = `${0.13 * radius}px Arial`; // ~46px if radius=360
-      ctx.fillStyle = "black";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-
-      // e.g. place the numbers at 80% of the radius
-      const numberPlacement = radius * 0.80; // ~288
-
-      for (let i = 1; i <= 12; i++) {
-        const angle = (i * 30) * (Math.PI / 180);
-        const x = Math.sin(angle) * numberPlacement;
-        const y = -Math.cos(angle) * numberPlacement;
-        ctx.fillText(i, x, y + 4); // added 4 to shift numbers downwards by 4px to fix the minor alignment issue of 3
-      }
-
-      // 3) Draw minute marks (0–59) closer to the circle
-      //    outerTick ~ 95% of radius => 342 (Updated to 97%)
-      //    innerTick slightly less, depending on hour vs. minute
-      for (let i = 0; i < 60; i++) {
-        const angle = (i * 6) * (Math.PI / 180);
-
-        const outerTick = radius * 0.97; // ~342
-        const innerTick = (i % 5 === 0) 
-          ? (radius * 0.90)            // hour mark
-          : (radius * 0.93);           // minute mark
-
-        ctx.lineWidth = i % 5 === 0 ? 4 : 2;
-
-        const x1 = Math.sin(angle) * outerTick;
-        const y1 = -Math.cos(angle) * outerTick;
-        const x2 = Math.sin(angle) * innerTick;
-        const y2 = -Math.cos(angle) * innerTick;
-
+        // 1) Draw the outer circle
         ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
+        ctx.arc(0, 0, radius, 0, 2 * Math.PI);
+        ctx.lineWidth = 16; // or ctx.lineWidth = radius * 0.03; // e.g. 3% of the radius
         ctx.strokeStyle = "black";
         ctx.stroke();
+
+        // 2) Draw the numbers (1–12)
+        //    Slightly smaller font, placed inward to avoid clashing with minute marks
+        ctx.font = `${0.13 * radius}px Arial`; // ~46px if radius=360
+        ctx.fillStyle = "black";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        // e.g. place the numbers at 80% of the radius
+        const numberPlacement = radius * 0.8; // ~288
+
+        for (let i = 1; i <= 12; i++) {
+          const angle = i * 30 * (Math.PI / 180);
+          const x = Math.sin(angle) * numberPlacement;
+          const y = -Math.cos(angle) * numberPlacement;
+          ctx.fillText(i, x, y + 4); // added 4 to shift numbers downwards by 4px to fix the minor alignment issue of 3
+        }
+
+        // 3) Draw minute marks (0–59) closer to the circle
+        //    outerTick ~ 95% of radius => 342 (Updated to 97%)
+        //    innerTick slightly less, depending on hour vs. minute
+        for (let i = 0; i < 60; i++) {
+          const angle = i * 6 * (Math.PI / 180);
+
+          const outerTick = radius * 0.97; // ~342
+          const innerTick =
+            i % 5 === 0
+              ? radius * 0.9 // hour mark
+              : radius * 0.93; // minute mark
+
+          ctx.lineWidth = i % 5 === 0 ? 4 : 2;
+
+          const x1 = Math.sin(angle) * outerTick;
+          const y1 = -Math.cos(angle) * outerTick;
+          const x2 = Math.sin(angle) * innerTick;
+          const y2 = -Math.cos(angle) * innerTick;
+
+          ctx.beginPath();
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(x2, y2);
+          ctx.strokeStyle = "black";
+          ctx.stroke();
+        }
+
+        // 4) Hour hand
+        //    (hours % 12) * 30 + fraction from minutes => degrees
+        const hourAngle =
+          ((hours % 12) * 30 + (minutes / 60) * 30) * (Math.PI / 180);
+        // Use ~2% of radius => ~7.2px
+        ctx.lineWidth = radius * 0.02;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        // Hour hand extends ~50% of radius => 180px
+        ctx.lineTo(
+          Math.sin(hourAngle) * (radius * 0.5),
+          -Math.cos(hourAngle) * (radius * 0.5)
+        );
+        ctx.strokeStyle = "red";
+        ctx.stroke();
+
+        // 5) Minute hand
+        const minuteAngle = minutes * 6 * (Math.PI / 180);
+        // Slightly thinner => 1.3% => ~4.68px
+        ctx.lineWidth = radius * 0.013;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        // Minute hand extends ~75% of radius => 270px
+        ctx.lineTo(
+          Math.sin(minuteAngle) * (radius * 0.9),
+          -Math.cos(minuteAngle) * (radius * 0.9)
+        );
+        ctx.strokeStyle = "blue";
+        ctx.stroke();
+
+        ctx.restore();
       }
 
-      // 4) Hour hand
-      //    (hours % 12) * 30 + fraction from minutes => degrees
-      const hourAngle = ((hours % 12) * 30 + (minutes / 60) * 30) * (Math.PI / 180);
-      // Use ~2% of radius => ~7.2px
-      ctx.lineWidth = radius * 0.02;
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      // Hour hand extends ~50% of radius => 180px
-      ctx.lineTo(
-        Math.sin(hourAngle) * (radius * 0.50),
-        -Math.cos(hourAngle) * (radius * 0.50)
-      );
-      ctx.strokeStyle = "red";
-      ctx.stroke();
-
-      // 5) Minute hand
-      const minuteAngle = (minutes * 6) * (Math.PI / 180);
-      // Slightly thinner => 1.3% => ~4.68px
-      ctx.lineWidth = radius * 0.013;
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      // Minute hand extends ~75% of radius => 270px
-      ctx.lineTo(
-        Math.sin(minuteAngle) * (radius * 0.90),
-        -Math.cos(minuteAngle) * (radius * 0.90)
-      );
-      ctx.strokeStyle = "blue";
-      ctx.stroke();
-
-      ctx.restore();
-    }
-
-    function generateRandomTime() {
+      function generateRandomTime() {
+        const level = document.getElementById("levelSelect").value;
         currentHours = Math.floor(Math.random() * 12);
-        currentMinutes = Math.floor(Math.random() * 60);
+
+        switch (level) {
+          case "1":
+            currentMinutes = 0;
+            break;
+          case "2":
+            currentMinutes = Math.floor(Math.random() * 4) * 15;
+            break;
+          case "3":
+            currentMinutes = Math.floor(Math.random() * 12) * 5;
+            break;
+          case "4":
+            currentMinutes = Math.floor(Math.random() * 60);
+            break;
+          default:
+            currentMinutes = Math.floor(Math.random() * 60);
+        }
+
         drawClock(currentHours, currentMinutes);
-        document.getElementById("message").style.display = "none";
-        document.getElementById("tryAgain").style.display = "none";
-        document.getElementById("viewAnswer").style.display = "none";
-        document.getElementById("retry").style.display = "none";
-        document.getElementById("validateBtn").style.display = "block";
-    }
+        resetUI();
+      }
 
-    function validateTime() {
-        document.getElementById("validateBtn").style.display = "none";
-
+      function validateTime() {
         const userInput = document.getElementById("timeInput").value;
-        if (!userInput) return;
+        if(!userInput) return;
+
+        document.getElementById("validateBtn").style.display = "none";
+        
         const [inputHours, inputMinutes] = userInput.split(":").map(Number);
 
-        if (parseInt(inputHours) % 12 === currentHours && parseInt(inputMinutes) === currentMinutes) {
-            document.getElementById("message").innerText = "Wohoo that was correct!";
-            document.getElementById("message").style.color = "green";
-            document.getElementById("message").style.display = "block";
-            document.getElementById("tryAgain").style.display = "block";
+        if (
+          parseInt(inputHours) % 12 === currentHours &&
+          parseInt(inputMinutes) === currentMinutes
+        ) {
+          document.getElementById("message").innerText =
+            "Wohoo that was correct!";
+          document.getElementById("message").style.color = "green";
+          document.getElementById("message").style.display = "block";
+          document.getElementById("tryAgain").style.display = "block";
 
-            document.getElementById("viewAnswer").style.display = "none";
-            document.getElementById("retry").style.display = "none";
+          document.getElementById("viewAnswer").style.display = "none";
+          document.getElementById("retry").style.display = "none";
         } else {
-            document.getElementById("message").innerText = "Oops! your answer was incorrect.";
-            document.getElementById("message").style.color = "red";
-            document.getElementById("message").style.display = "block";
+          document.getElementById("message").innerText =
+            "Oops! your answer was incorrect.";
+          document.getElementById("message").style.color = "red";
+          document.getElementById("message").style.display = "block";
 
-            document.getElementById("viewAnswer").style.display = "block";
-            document.getElementById("retry").style.display = "block";
-            document.getElementById("tryAgain").style.display = "block";
+          document.getElementById("viewAnswer").style.display = "block";
+          document.getElementById("retry").style.display = "block";
+          document.getElementById("tryAgain").style.display = "block";
         }
-    }
+      }
 
-    function showAnswer() {
-        document.getElementById("viewAnswer").innerText = `${String(currentHours).padStart(2, '0')}:${String(currentMinutes).padStart(2, '0')}`;
-    }
+      function showAnswer() {
+        document.getElementById("viewAnswer").innerText = `${String(
+          currentHours == 0 ? 12 : currentHours
+        ).padStart(2, "0")}:${String(currentMinutes).padStart(2, "0")}`;
+      }
 
-    function resetUI() {
+      function resetUI() {
         document.getElementById("message").style.display = "none";
         document.getElementById("validateBtn").style.display = "block";
         document.getElementById("viewAnswer").style.display = "none";
         document.getElementById("viewAnswer").innerText = "View Answer";
         document.getElementById("retry").style.display = "none";
         document.getElementById("tryAgain").style.display = "none";
-    }
+        document.getElementById("timeInput").value = "";
+      }
 
-    function retrySameTime() {
+      function retrySameTime() {
         drawClock(currentHours, currentMinutes);
         resetUI();
-    }
+      }
 
-    // Initialize a random clock on page load
-    window.onload = generateRandomTime;
-  </script>
-</body>
+      // Initialize a random clock on page load
+      window.onload = generateRandomTime;
+    </script>
+  </body>
 </html>
