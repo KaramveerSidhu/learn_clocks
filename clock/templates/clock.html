@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Learn Clocks</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <style>
     body {
       display: flex;
@@ -22,8 +23,8 @@
     /* The canvas has a real width/height of 800×800,
        and is also displayed at 800×800. */
     #clockCanvas {
-      width: 800px;   /* CSS display size */
-      height: 800px;  /* CSS display size */
+      width: 600px;   /* CSS display size */
+      height: 600px;  /* CSS display size */
     }
 
     .controls {
@@ -31,28 +32,36 @@
       text-align: center;
       display: flex;
       flex-direction: column;
+      align-items: center;
       gap: 16px;
+      width: 600px;
     }
     .message {
       margin-top: 10px;
-      font-size: 20px;
-      font-weight: bold;
-      color: green;
       display: none;
     }
+    .text {
+      font-size: 32px;
+      color: lightseagreen;
+      font-weight: 600;
+    }
     .button {
-        background: none;
-        font-size: 16px;
+        font-size: 24px;
+        font-weight: 600;
         outline: none;
         border-radius: 4px;
-        padding: 8px 12px;
-        border: 1px solid grey;
+        padding: 12px 42px;
         cursor: pointer;
+        background: lightseagreen;
+        color: white;
+        border: 1px solid lightseagreen
     }
     .validate {
-        background: green;
-        color: white;
-        margin-top: 16px;
+        margin-top: 48px;
+    }
+    .retry {
+      background: transparent;
+      color: lightseagreen;
     }
     .buttons {
         display: flex;
@@ -60,27 +69,66 @@
         justify-content: center;
         gap: 12px;
     }
+    .container{
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+    }
+    
+    input[type="time"]::-webkit-datetime-edit-ampm-field {
+      display: none;
+    }
+    .flatpickr-am-pm {
+      display: none;
+    }
+    #timeInput {
+      padding: 12px 42px;
+      text-align: center;
+      font-size: 32px;
+      outline: none;
+      border: 1px solid lightseagreen;
+      border-radius: 8px;
+      width: 220px;
+      color: lightseagreen;
+      font-weight: 600;
+    }
+    #timeInput::placeholder {
+      color: lightseagreen;
+    }
+    
   </style>
 </head>
 <body>
   <!-- The actual drawing buffer is 800×800 pixels -->
-  <canvas id="clockCanvas" width="800" height="800"></canvas>
+   <div class="container">
+    <canvas id="clockCanvas" width="800" height="800"></canvas>
 
-  <div class="controls">
-    <label for="timeInput">Select the time:</label>
-    <input type="time" id="timeInput" step="60">
-    <button id="validateBtn" onclick="validateTime()" class="button validate">Validate</button>
-    <p id="message" class="message"></p>
+    <div class="controls">
+      <!-- <label for="timeInput" class="text">Choose Time</label> -->
+      <!-- <input type="time" id="timeInput" step="60"> -->
+      <input type="text" id="timeInput" placeholder="Choose Time">
+      <button id="validateBtn" onclick="validateTime()" class="button validate">Check</button>
+      <p id="message" class="message text"></p>
 
-    <div class="buttons">
-        <button id="viewAnswer" onclick="showAnswer()" class="button" style="display: none;">View Answer</button>
-        <button id="retry" onclick="retrySameTime()" class="button" style="display: none;">Retry</button>
-        <button id="tryAgain" onclick="generateRandomTime()" class="button" style="display: none;">Try More</button>
-      </div>
+      <div class="buttons">
+          <button id="viewAnswer" onclick="showAnswer()" class="button" style="display: none;">View Answer</button>
+          <button id="retry" onclick="retrySameTime()" class="button retry" style="display: none;">Retry</button>
+          <button id="tryAgain" onclick="generateRandomTime()" class="button" style="display: none;">Try More</button>
+        </div>
+    </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script>
-    console.log("loading..")
+    flatpickr("#timeInput", {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "h:i", // 12-hour format without AM/PM
+        time_24hr: false, // Ensures it's in 12-hour format
+    });
+  </script>
+  <script>
     const canvas = document.getElementById("clockCanvas");
     const ctx = canvas.getContext("2d");
 
