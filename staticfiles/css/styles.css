@@ -1,0 +1,108 @@
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f4f4f4;
+  margin: 0;
+}
+canvas {
+  display: block;
+  border-radius: 50%;
+}
+/* The canvas has a real width/height of 800×800,
+     and is also displayed at 800×800. */
+#clockCanvas {
+  width: 600px; /* CSS display size */
+  height: 600px; /* CSS display size */
+}
+.controls {
+  margin-top: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 600px;
+}
+.message {
+  margin-top: 10px;
+  display: none;
+}
+.text {
+  font-size: 32px;
+  color: lightseagreen;
+  font-weight: 600;
+}
+.button {
+  font-size: 24px;
+  font-weight: 600;
+  outline: none;
+  border-radius: 4px;
+  padding: 12px 42px;
+  cursor: pointer;
+  background: lightseagreen;
+  color: white;
+  border: 1px solid lightseagreen;
+}
+.validate {
+  margin-top: 48px;
+}
+.retry {
+  background: transparent;
+  color: lightseagreen;
+}
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+input[type="time"]::-webkit-datetime-edit-ampm-field {
+  display: none;
+}
+.flatpickr-am-pm {
+  display: none;
+}
+#timeInput {
+  padding: 12px 42px;
+  text-align: center;
+  font-size: 32px;
+  outline: none;
+  border: 1px solid lightseagreen;
+  border-radius: 8px;
+  width: 220px;
+  color: lightseagreen;
+  font-weight: 600;
+}
+#timeInput::placeholder {
+  color: lightseagreen;
+}
+#levelSelect {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 8px;
+  background: transparent;
+  color: lightseagreen;
+  height: 52.8px;
+}
+#levelSelect option {
+  padding: 20px; /* Adjust padding as needed */
+}
+#reloadBtn {
+  position: absolute;
+  top: 20px;
+  left: 140px;
+  font-size: 32px;
+  height: 52.8px;
+  padding: 0 16px;
+  transform: scaleX(-1); /* Rotate 180 degrees and mirror */
+}
