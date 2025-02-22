@@ -1,24 +1,16 @@
 {
-    "version": 2,
-    "builds": [
-      {
-        "src": "learn_clocks/wsgi.py",
-        "use": "@vercel/python",
-        "config": { "maxLambdaSize": "15mb" }      
-      },
-      {
-        "src": "staticfiles/**/*",
-        "use": "@vercel/static"
-      }
-    ],
-    "routes": [
-      {
-        "src": "/static/(.*)",
-        "dest": "/staticfiles/$1"
-      },
-      {
-        "src": "/(.*)",
-        "dest": "learn_clocks/wsgi.py"
-      }
-    ]
-  }
+  "version": 2,
+  "builds": [
+    {
+      "src": "learn_clocks/wsgi.py",
+      "use": "@vercel/python",
+      "config": { "maxLambdaSize": "15mb", "runtime": "python3.12.5" }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "learn_clocks/wsgi.py"
+    }
+  ]
+}
