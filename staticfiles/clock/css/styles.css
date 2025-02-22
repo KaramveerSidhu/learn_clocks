@@ -104,5 +104,5 @@ input[type="time"]::-webkit-datetime-edit-ampm-field {
   font-size: 32px;
   height: 52.8px;
   padding: 0 16px;
-  transform: rotate(180deg) scaleX(-1); /* Rotate 180 degrees and mirror */
+  transform: scaleX(-1); /* Rotate 180 degrees and mirror */
 }
