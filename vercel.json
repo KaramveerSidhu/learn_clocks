@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "learn_clocks/wsgi.py",
+      "src": "manage.py",
       "use": "@vercel/python",
       "config": { "maxLambdaSize": "15mb", "runtime": "python3.12.5" }
     },
@@ -18,7 +18,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "learn_clocks/wsgi.py"
+      "dest": "manage.py"
     }
   ]
 }
