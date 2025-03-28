@@ -2,8 +2,7 @@
   "version": 2,
   "functions": {
     "learn_clocks/wsgi.py": {
-      "runtime": "python3.12",
-      "maxLambdaSize": "15mb",
+      "runtime": "@vercel/python@3.9",
       "includeFiles": "db.sqlite3"
     }
   },
