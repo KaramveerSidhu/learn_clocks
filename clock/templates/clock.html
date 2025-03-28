@@ -10,8 +10,40 @@
       href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
     />
     <link rel="stylesheet" href="{% static 'clock/css/styles.css' %}" />
+    <style>
+      .player-info {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        font-size: 1.2rem;
+        color: #20b2aa;
+        font-family: 'Comic Sans MS', sans-serif;
+        text-align: right;
+      }
+
+      .new-game-button {
+        margin-top: 5px;
+        font-size: 0.9rem;
+        padding: 5px 10px;
+        background-color: #20b2aa;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .new-game-button:hover {
+        background-color: #105e5b; /* Darker shade on hover */
+      }
+    </style>
   </head>
   <body>
+    <div class="player-info" id="playerInfo">
+      <span id="playerName"></span>
+      <br />
+      <button class="new-game-button" onclick="startNewGame()">New Game</button>
+    </div>
     <div>
       <select id="levelSelect" class="button" onchange="generateRandomTime()">
         <option value="1">Level 1</option>
@@ -79,9 +111,26 @@
       flatpickr("#timeInput", {
         enableTime: true,
         noCalendar: true,
-        dateFormat: "h:i", 
-        time_24hr: false, 
+        dateFormat: "h:i",
+        time_24hr: false,
       });
+
+      // Extract the 'name' query parameter from the URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const playerName = urlParams.get("name");
+
+      // Redirect to the home page if no name is provided
+      if (!playerName) {
+        window.location.href = "/";
+      } else {
+        // Display the player's name in the top-right corner
+        document.getElementById("playerName").innerText = `Player: ${playerName}`;
+      }
+
+      // Function to start a new game
+      function startNewGame() {
+        window.location.href = "/";
+      }
     </script>
     <script src="{% static 'clock/js/clock.js' %}"></script>
   </body>
