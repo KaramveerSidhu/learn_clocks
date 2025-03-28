@@ -17,7 +17,7 @@
         right: 20px;
         font-size: 1.2rem;
         color: #20b2aa;
-        font-family: 'Comic Sans MS', sans-serif;
+        font-family: "Comic Sans MS", sans-serif;
         text-align: right;
       }
 
@@ -35,6 +35,22 @@
 
       .new-game-button:hover {
         background-color: #105e5b; /* Darker shade on hover */
+      }
+
+      .mic-button {
+        font-size: 1.5rem;
+        padding: 10px;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .time-input-mods {
+        display: flex;
+        align-items: center;
+        gap: 16px;
       }
     </style>
   </head>
@@ -67,7 +83,16 @@
       <canvas id="clockCanvas" width="800" height="800"></canvas>
 
       <div class="controls">
-        <input type="text" id="timeInput" placeholder="Choose Time" />
+        <div clas="time-input-mods">
+          <input type="text" id="timeInput" placeholder="Choose Time" />
+          <button
+            id="micButton"
+            class="mic-button"
+            onclick="startSpeechRecognition()"
+          >
+            🎙️
+          </button>
+        </div>
         <button
           id="validateBtn"
           onclick="validateTime()"
@@ -124,12 +149,66 @@
         window.location.href = "/";
       } else {
         // Display the player's name in the top-right corner
-        document.getElementById("playerName").innerText = `Player: ${playerName}`;
+        document.getElementById(
+          "playerName"
+        ).innerText = `Player: ${playerName}`;
       }
 
       // Function to start a new game
       function startNewGame() {
         window.location.href = "/";
+      }
+
+      function startSpeechRecognition() {
+        // Check if the browser supports Speech Recognition
+        const SpeechRecognition =
+          window.SpeechRecognition || window.webkitSpeechRecognition;
+
+        if (!SpeechRecognition) {
+          alert("Speech Recognition is not supported in your browser.");
+          return;
+        }
+
+        const recognition = new SpeechRecognition();
+        recognition.lang = "en-US";
+        recognition.interimResults = false;
+
+        recognition.onstart = function () {
+          console.log("Speech recognition started...");
+        };
+
+        recognition.onresult = function (event) {
+          const transcript = event.results[0][0].transcript.toLowerCase();
+          console.log("Recognized speech:", transcript);
+
+          // Process the recognized speech into a time-like format
+          const timeRegex = /(\d{1,2})[: ]?(\d{1,2})?/; // Matches "3:30", "3 30", "330", etc.
+          const match = transcript.match(timeRegex);
+
+          if (match) {
+            let hours = match[1].padStart(2, "0"); // First group as hours
+            let minutes = match[2] ? match[2].padStart(2, "0") : "00"; // Second group as minutes (default to "00")
+
+            const formattedTime = `${hours}:${minutes}`;
+
+            // Set the formatted time as the value of the input
+            document.getElementById("timeInput").value = formattedTime;
+
+            // Automatically trigger the "Check" button logic
+            validateTime();
+          } else {
+            alert("Could not recognize a valid time. Please try again.");
+          }
+        };
+
+        recognition.onerror = function (event) {
+          console.error("Speech recognition error:", event.error);
+          alert(
+            "An error occurred during speech recognition. Please try again."
+          );
+        };
+
+        recognition.start();
       }
     </script>
     <script src="{% static 'clock/js/clock.js' %}"></script>
