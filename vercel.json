@@ -20,5 +20,10 @@
       "src": "/(.*)",
       "dest": "learn_clocks/wsgi.py"
     }
-  ]
+  ],
+  "functions": {
+    "learn_clocks/wsgi.py": {
+      "includeFiles": ["db.sqlite3"]
+    }
+  }
 }
