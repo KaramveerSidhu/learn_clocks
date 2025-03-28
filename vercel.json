@@ -23,7 +23,7 @@
   ],
   "functions": {
     "learn_clocks/wsgi.py": {
-      "includeFiles": ["db.sqlite3"]
+      "includeFiles": "db.sqlite3"
     }
   }
 }
