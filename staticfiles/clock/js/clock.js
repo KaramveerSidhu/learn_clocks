@@ -121,13 +121,32 @@ document.addEventListener("DOMContentLoaded", function () {
     resetUI();
   }
 
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === name + "=") {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
   function validateTime() {
     const userInput = document.getElementById("timeInput").value;
+    const correctAnswer = `${String(currentHours == 0 ? 12 : currentHours).padStart(2, "0")}:${String(currentMinutes).padStart(2, "0")}`;
+    const playerName = new URLSearchParams(window.location.search).get("name");
+
     if (!userInput) return;
 
     document.getElementById("validateBtn").style.display = "none";
 
     const [inputHours, inputMinutes] = userInput.split(":").map(Number);
+    const isCorrect = parseInt(inputHours) % 12 === currentHours && parseInt(inputMinutes) === currentMinutes
 
     if (
       parseInt(inputHours) % 12 === currentHours &&
@@ -150,6 +169,21 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("retry").style.display = "block";
       document.getElementById("tryAgain").style.display = "block";
     }
+
+    // Log the data to the backend
+    fetch("/log/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "X-CSRFToken": getCookie("csrftoken"), // Ensure CSRF token is included
+      },
+      body: new URLSearchParams({
+        player_name: playerName,
+        correct_answer: correctAnswer,
+        player_answer: userInput,
+        is_correct: isCorrect,
+      }),
+    });
   }
 
   function showAnswer() {

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instructions</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', sans-serif;
+      background-color: #e0f7f5; /* Light background complementing #20b2aa */
+      color: #20b2aa; /* LightSeaGreen */
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      color: #105e5b; /* Darker shade of LightSeaGreen */
+    }
+
+    .instructions {
+      font-size: 1.5rem;
+      line-height: 2;
+      max-width: 800px;
+      background-color: #ffffff;
+      border: 2px solid #20b2aa;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .instruction-item {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+
+    .name-input {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      padding: 10px;
+      border: 2px solid #20b2aa;
+      border-radius: 8px;
+      outline: none;
+      width: 300px;
+      text-align: center;
+    }
+
+    .start-button {
+      margin-top: 20px;
+      font-size: 1.5rem;
+      padding: 10px 30px;
+      background-color: #20b2aa;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      font-family: 'Comic Sans MS', sans-serif;
+    }
+
+    .start-button:hover {
+      background-color: #105e5b; /* Darker shade on hover */
+    }
+
+    .error-message {
+      color: red;
+      font-size: 1rem;
+      margin-top: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome to Learn Clocks!</h1>
+  <div class="instructions">
+    <p class="instruction-item">1. Look at the clock and try to guess the time.</p>
+    <p class="instruction-item">2. Use the input box to enter your answer.</p>
+    <p class="instruction-item">3. Click "Check" to see if your answer is correct.</p>
+    <p class="instruction-item">4. Have fun and try to improve your skills!</p>
+  </div>
+  <input type="text" id="userName" class="name-input" placeholder="Enter your name" />
+  <p id="errorMessage" class="error-message">Please enter your name to start the game.</p>
+  <button class="start-button" onclick="startGame()">Start Game</button>
+
+  <script>
+    function startGame() {
+      const userName = document.getElementById('userName').value.trim();
+      const errorMessage = document.getElementById('errorMessage');
+
+      if (userName === '') {
+        errorMessage.style.display = 'block';
+      } else {
+        errorMessage.style.display = 'none';
+        // Redirect to the game page, passing the user's name as a query parameter
+        window.location.href = `/clock/?name=${encodeURIComponent(userName)}`;
+      }
+    }
+  </script>
+</body>
+</html>
